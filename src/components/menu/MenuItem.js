@@ -17,7 +17,7 @@ export default function MenuItem() {
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate
         tempore expedita qui nesciunt reprehenderit provident quis!
       </p>
-      <button className="mt-4 bg-primary text-white rounden-full px-6 py-2">
+      <button className="mt-4 bg-primary text-white rounded-full px-6 py-2">
         Add to cart $12
       </button>
     </div>
