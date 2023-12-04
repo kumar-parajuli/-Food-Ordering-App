@@ -58,28 +58,28 @@ export default function Register() {
           type="email"
           placeholder="email"
           value={user.email}
-          dissabled={creatingUser}
+          disabled={creatingUser}
           onChange={(e) => setUser({ ...user, email: e.target.value })}
         />
         <input
           type="password"
           placeholder="password"
           value={user.password}
-          dissabled={creatingUser}
+          disabled={creatingUser}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
         />
-        <button type="submit" dissabled={creatingUser}>
+        <button type="submit" disabled={creatingUser}>
           Register
         </button>
         <div className="my-4 text-center text-gray-500">
           or login with provider
         </div>
         <button className="flex gap-4 justify-center">
-          <Image src={"/google.png"} alt={"login"} width={24} height={32} />
+          <Image src={"/google.png"} alt={"login"} width={"24"} height={"32"} />
           Login with google
         </button>
         <div className="text-center my-4 text-gray-500 border-t pt-4">
-          Existing account?{" "}
+          Existing account?
           <Link className="underline" href={"/login"}>
             Login here &raquo;
           </Link>

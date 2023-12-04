@@ -18,19 +18,20 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const { email, password } = credentials;
+        console.log({ credentials });
 
-        //connect db
-        connectDB();
-        const user = await User.findOne({ email });
-        const passwordOk = user && bcrypt.compareSync(password, user.password);
-
-        if (passwordOk) {
-          return user;
-        }
         return null;
       },
     }),
   ],
 });
 export { handler as GET, handler as POST };
+// const { email, password } = credentials;
+
+// //connect db
+// connectDB();
+// const user = await User.findOne({ email });
+// const passwordOk = user && bcrypt.compareSync(password, user.password);
+
+// if (passwordOk) {
+//   return user;
