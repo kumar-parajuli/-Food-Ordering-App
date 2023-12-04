@@ -14,7 +14,11 @@ export default function Login() {
     e.preventDefault();
     setLoginInProgress(true);
 
-    await signIn("Credentials", { email: user.email, password: user.password }); //from credentialof google
+    await signIn("Credentials", {
+      email: user.email,
+      password: user.password,
+      callbackUrl: "/",
+    }); //from credentialof google
 
     console.log(response);
     if (response.ok) {
@@ -30,23 +34,26 @@ export default function Login() {
           type="email"
           placeholder="email"
           value={user.email}
-          dissabled={loginInProgress}
+          disabled={loginInProgress}
           onChange={(e) => setUser({ ...user, email: e.target.value })}
         />
         <input
           type="password"
           placeholder="password"
           value={user.password}
-          dissabled={loginInProgress}
+          disabled={loginInProgress}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
         />
-        <button type="submit" dissabled={loginInProgress}>
+        <button type="submit" disabled={loginInProgress}>
           Login
         </button>
         <div className="my-4 text-gray-500 text-center">
           or login with provider
         </div>
-        <button className="flex gap-4 justify-center">
+        <button
+          type="submit"
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+          className="flex gap-4 justify-center">
           <Image src={"/google.png"} alt={"login"} width={24} height={32} />
           Login with google
         </button>

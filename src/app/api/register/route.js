@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { connectDb } from "../../../dbConfig/dbConfig";
+import { connectDB } from "../../../dbConfig/dbConfig";
 import { User, UserSchema } from "../../../models/userSchema";
 import bcrypt from "bcrypt";
 
-connectDb();
+connectDB();
 
 export async function POST(req) {
   const body = await req.json();
