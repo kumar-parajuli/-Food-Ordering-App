@@ -1,25 +1,19 @@
 import { model, models, Schema } from "mongoose";
-import bcrypt from "bcrypt";
 
 const UserSchema = new Schema(
   {
+    name: { type: String },
+
     email: { type: String, required: true, unique: true },
     password: {
       type: String,
-      required: true,
-      validate: {
-        validator: (pass) => {
-          if (!pass?.length || pass.length < 5) {
-            throw new Error("Password must be at least 5 characters");
-          }
-        },
-      },
     },
     image: { type: String },
   },
   { timestamps: true }
 );
-
+export const User = models?.User || model("User", UserSchema);
+/*
 // hash the user password before saving
 UserSchema.pre("save", async function (next) {
   const user = this;
@@ -51,3 +45,4 @@ export const User = models?.User || model("User", UserSchema);
 //   const salt = bcrypt.genSaltSync(10);
 //   user.password = bcrypt.hashSync(notHashedPassword, salt);
 // });
+*/
