@@ -1,8 +1,23 @@
+import { uploadOnCloudinary } from "../../utils/cloudinary"; // Update the path accordingly
+
 export async function POST(req) {
   const data = await req.formData();
-  //   console.log(data);
-  if (data.get("file")) {
-    console.log("we have afile", data.get("file"));
+  const file = data.get("files");
+
+  if (file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const cloudinaryResponse = await uploadOnCloudinary(buffer);
+
+    return Response.json(true);
   }
-  return Response.json(true);
 }
+// export async function POST(req) {
+//   const data = await req.formData();
+//   //   console.log(data);
+//   if (data.get("file")) {
+//     console.log("we have afile", data.get("file"));
+//   }
+//   return Response.json(true);
+// }

@@ -3,14 +3,18 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter, redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { uploadOnCloudinary } from "../utils/cloudinary";
+
 export default function Profile() {
   const router = useRouter();
-  const session = useSession();
+  // const session = useSession();
+  const { data: session, status } = useSession();
   const [userName, setUserName] = useState("");
   const [savedProfile, setSavedProfile] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [userImage, setUserImage] = useState(session?.data?.user?.image || "");
 
-  const { status } = session;
+  // const { status } = session;
 
   // console.log(session);
   useEffect(() => {
@@ -34,6 +38,34 @@ export default function Profile() {
       setSavedProfile(true);
     }
   }
+  //replace code or cleanup code
+  async function handleFileChange(ev) {
+    const files = ev.target.files;
+    if (files?.length === 1) {
+      const data = new FormData();
+      data.set("files", files[0]);
+
+      const cloudinaryResponse = await uploadOnCloudinary(files[0]);
+
+      if (cloudinaryResponse) {
+        setUserImage(cloudinaryResponse.url);
+      }
+    }
+  }
+
+  if (status === "Loading") {
+    return "Loading...";
+  }
+
+  if (status === "unauthenticated") {
+    router.push("/login");
+  }
+
+  if (!session?.data?.user) {
+    return <div>User data not found</div>;
+  }
+
+  /*
   //file upload handler
   async function handleFileChange(ev) {
     // console.log(ev);
@@ -65,6 +97,7 @@ export default function Profile() {
 
   // Check if image is defined in user
   const userImage = user.image;
+  */
   return (
     <section className="mt-8">
       <h1 className="text-center text-primary text-4xl mb-4">Profile</h1>
