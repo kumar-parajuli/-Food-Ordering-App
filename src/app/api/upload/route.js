@@ -10,14 +10,10 @@ export async function POST(req) {
 
     const cloudinaryResponse = await uploadOnCloudinary(buffer);
 
-    return Response.json(true);
+    // Use cloudinaryResponse as needed
+
+    return new Response(JSON.stringify(true), {
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
-// export async function POST(req) {
-//   const data = await req.formData();
-//   //   console.log(data);
-//   if (data.get("file")) {
-//     console.log("we have afile", data.get("file"));
-//   }
-//   return Response.json(true);
-// }

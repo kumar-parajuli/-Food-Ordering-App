@@ -7,14 +7,14 @@ import { uploadOnCloudinary } from "../utils/cloudinary";
 
 export default function Profile() {
   const router = useRouter();
-  // const session = useSession();
-  const { data: session, status } = useSession();
+  const session = useSession();
+  // const { data: session, status } = useSession();
   const [userName, setUserName] = useState("");
   const [savedProfile, setSavedProfile] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [userImage, setUserImage] = useState(session?.data?.user?.image || "");
+  const [newImageUrl, setNewImageUrl] = useState(null); // Added state for the new image URL
 
-  // const { status } = session;
+  const { status } = session;
 
   // console.log(session);
   useEffect(() => {
@@ -38,66 +38,66 @@ export default function Profile() {
       setSavedProfile(true);
     }
   }
-  //replace code or cleanup code
   async function handleFileChange(ev) {
     const files = ev.target.files;
+
     if (files?.length === 1) {
       const data = new FormData();
       data.set("files", files[0]);
 
-      const cloudinaryResponse = await uploadOnCloudinary(files[0]);
+      try {
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: data,
+        });
 
-      if (cloudinaryResponse) {
-        setUserImage(cloudinaryResponse.url);
+        if (response.ok) {
+          const cloudinaryResponse = await response.json();
+
+          // Assuming cloudinaryResponse.url contains the new image URL
+          const newImageUrl = cloudinaryResponse.url;
+
+          // Update the UI state with the new image URL
+          setNewImageUrl(newImageUrl);
+        } else {
+          console.error("Image upload failed");
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
       }
     }
   }
 
-  if (status === "Loading") {
-    return "Loading...";
-  }
-
-  if (status === "unauthenticated") {
-    router.push("/login");
-  }
-
-  if (!session?.data?.user) {
-    return <div>User data not found</div>;
-  }
-
-  /*
-  //file upload handler
-  async function handleFileChange(ev) {
-    // console.log(ev);
-    console.log("upload");
-    const files = ev.target.files;
-    if (files?.length === 1) {
-      const data = new FormData();
-      data.set("files", files[0]);
-      await fetch("/api/upload", {
-        method: "POST",
-        body: data,
-        // headers: { "Content-Type": "mutipart/form-data" },
-      });
-    }
-  }
-  if (status === "Loading") {
-    return "Loading...";
-  }
-  if (status === "unauthenticated") {
-    router.push("/login");
-    // return redirect("/login");
-  }
-  // Check if user is defined in session.data
-  const user = session.data?.user;
-  if (!user) {
-    // Handle the case where user is not available in session
-    return <div>User data not found</div>;
-  }
-
-  // Check if image is defined in user
-  const userImage = user.image;
-  */
+  // //file upload handler
+  // async function handleFileChange(ev) {
+  //   // console.log(ev);
+  //   console.log("upload");
+  //   const files = ev.target.files;
+  //   if (files?.length === 1) {
+  //     const data = new FormData();
+  //     data.set("files", files[0]);
+  //     await fetch("/api/upload", {
+  //       method: "POST",
+  //       body: data,
+  //       // headers: { "Content-Type": "mutipart/form-data" },
+  //     });
+  //   }
+  // }
+  // if (status === "Loading") {
+  //   return "Loading...";
+  // }
+  // if (status === "unauthenticated") {
+  //   router.push("/login");
+  //   // return redirect("/login");
+  // }
+  // // Check if user is defined in session.data
+  // const user = session.data?.user;
+  // if (!user) {
+  //   // Handle the case where user is not available in session
+  //   return <div>User data not found</div>;
+  // }
+  // // Check if image is defined in user
+  const userImage = session?.data?.user?.image;
   return (
     <section className="mt-8">
       <h1 className="text-center text-primary text-4xl mb-4">Profile</h1>
@@ -145,7 +145,9 @@ export default function Profile() {
             <input
               type="email"
               disabled={true}
-              value={session.data.user.email}
+              value={session?.data?.user?.email || ""}
+
+              // value={session.data.user.email}
             />
 
             <button type="submit">Save</button>
